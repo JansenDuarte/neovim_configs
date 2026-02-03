@@ -277,6 +277,7 @@ local function file_type()
 		text = "[TXT]",
 		cpp = "[C++]",
 		ps1 = "[PS]",
+		toml = "[TOML]",
     }
 
     if ft == "" then
@@ -356,7 +357,7 @@ vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#d9d9d9", fg="black"})
 -- Function to change statusline based on window focus
 local function setup_dynamic_statusline()
 	-- Create command for window focused
-    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "BufWritePost" }, {
         callback = function()
 			local git_changes = git_changes()
 			if #git_changes == 0 then
