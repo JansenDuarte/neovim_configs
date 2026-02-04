@@ -141,24 +141,46 @@ vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
 -- Quick config editing
 vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
+
 -- Quick comment
-vim.keymap.set("n", "<C-;>", ":s/^\\(\\s*\\)/\\1# <CR>", { desc = "Quick comment" })
-vim.keymap.set("v", "<C-;>", ":s/^\\(\\s*\\)/\\1# <CR>", { desc = "Quick comment" })
+local function quick_comment()
+	local ft = vim.bo.filetype
+	local commchar = {
+		lua = "--",
+		php = "\\/\\/",
+		python = "#"
+	}
+	local char = commchar[ft] or "\\/\\/"
+
+	vim.cmd(":s/^\\(\\s*\\)/\\1" .. char .. " ")
+end
+
+vim.keymap.set("n", "<C-;>", quick_comment)
+vim.keymap.set("v", "<C-;>", quick_comment)
 
 -- Quick uncomment
-vim.keymap.set("n", "<C-A-;>", ":s/^\\(\\s*\\)# /\\1<CR>", { desc = "Quick comment" })
-vim.keymap.set("v", "<C-A-;>", ":s/^\\(\\s*\\)# /\\1<CR>", { desc = "Quick comment" })
+local function quick_uncomment()
+	local ft = vim.bo.filetype
+	local commchar = {
+		lua = "--",
+		php = "\\/\\/",
+		python = "#"
+	}
+	local char = commchar[ft] or "\\/\\/"
+
+	-- this has a problem when there is no white space
+	-- at the start of the line
+	vim.cmd(":s/^\\(\\s*\\)" .. char .. " /\\1")
+end
+
+vim.keymap.set("n", "<C-A-;>", quick_uncomment)
+vim.keymap.set("v", "<C-A-;>", quick_uncomment)
 
 -- Copy full file-path
 vim.keymap.set("n", "<leader>pa", function()
     local path = vim.fn.expand("%:p")
     vim.fn.setreg("+", path)
     print("file:", path)
-end)
-
--- Create lua comment
-vim.keymap.set("n", "<leader>cc", function()
-	print("I did something")
 end)
 
 -- Basic autocommands
@@ -250,7 +272,7 @@ local function git_changes()
 		table.insert(s, i)
 	end
 
-	local char={"*", "+", "-"}
+	local char={"#", "+", "-"}
 	local num=""
 
 	for index, j in ipairs(s) do
@@ -360,7 +382,7 @@ vim.cmd([[
   highlight StatusLineBold gui=bold cterm=bold
 ]])
 
-vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#d9d9d9", fg="black"})
+vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#d9d9d9", fg="#05021e"})
 
 -- Function to change statusline based on window focus
 local function setup_dynamic_statusline()
@@ -372,6 +394,7 @@ local function setup_dynamic_statusline()
 				git_changes = ""
 			else
 				git_changes = "%#StatusLineBold#[ " .. git_changes .. " ]%#StatusLine#"
+				-- git_changes = "%#StatusLine#[ " .. git_changes .. " ]%#StatusLine#"
 			end
 			
             vim.opt_local.statusline = table.concat {
