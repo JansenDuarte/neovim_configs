@@ -91,6 +91,12 @@ vim.g.maplocalleader = " " --set local leader key (NEW)
 vim.keymap.set("i", "<C-b>", "<ESC>", { desc = "go back to normal", silent = true} )
 vim.keymap.set("v", "<C-b>", "<ESC>", { desc = "go back to normal", silent = true} )
 
+-- Delete without yanking
+vim.keymap.set("n", "d", '"_d')
+vim.keymap.set("n", "D", '"_D')
+vim.keymap.set("n", "x", '"_x')
+vim.keymap.set("v", "d", '"_d')
+
 -- Y to EOL
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
