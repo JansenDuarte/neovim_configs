@@ -228,6 +228,8 @@ end
 
 -- Git changes function
 local function git_changes()
+	-- use this to verify untracked files
+	-- git ls-files --others --exclude-standard
 	local path = vim.fn.expand('%:h')
 	local diff = ""
 
@@ -311,11 +313,11 @@ local function file_size()
     local size = vim.fn.getfsize(vim.fn.expand('%'))
     if size < 0 then return "" end
     if size < 1024 then
-        return size .. "B"
+        return size .. " B"
     elseif size < 1024 * 1024 then
-        return string.format("%.1fKiB", size / 1024)
+        return string.format("%.1f KiB", size / 1024)
     else
-        return string.format("%.1fMiB", size / 1024 / 1024)
+        return string.format("%.1f MiB", size / 1024 / 1024)
     end
 end
 
@@ -371,8 +373,8 @@ local function setup_dynamic_statusline()
                 "%#StatusLineBold#",
                 "%{v:lua.mode_icon()}",
                 "%#StatusLine#",
-                " %f %h%m%r ",			--%File %Hidden%Modified%Readonly
-                "%{v:lua.file_type()}",
+                " %f %h%m%r",			--%File %Hidden%Modified%Readonly
+                 -- "%{v:lua.file_type()}", --File type
                 "│",
                 "%{v:lua.file_size()}",
                 "│",
