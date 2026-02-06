@@ -383,6 +383,11 @@ vim.cmd([[
 ]])
 
 vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#d9d9d9", fg="#05021e"})
+vim.api.nvim_set_hl(0, "NoBuffStatusLine", { bold=true, bg="#0a0723", fg="#d9d9d9"})
+
+-- Inverted colors
+-- vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#0a0723", fg="#d9d9d9"})
+-- vim.api.nvim_set_hl(0, "NoBuffStatusLine", { bold=true, bg="#d9d9d9", fg="#05021e"})
 
 -- Function to change statusline based on window focus
 local function setup_dynamic_statusline()
@@ -421,7 +426,7 @@ local function setup_dynamic_statusline()
 	-- Create command for window NOT focused
     vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
         callback = function()
-            vim.opt_local.statusline = table.concat{" %f %h%m%r │ %{v:lua.file_type()} │ %=  %l:%c %P "}
+            vim.opt_local.statusline = table.concat{"%#NoBuffStatusLine# %f %h%m%r %=  %P "}
         end
     })
 end
