@@ -56,7 +56,7 @@ vim.opt.writebackup = false							--don't create backup before writing
 vim.opt.swapfile = false							--don't create swap files
 vim.opt.undofile = true								--persistent undo
 vim.opt.undodir = vim.fn.expand("~/.vim/undodir")	--undo directory
-vim.opt.updatetime = 300							--faster completion
+vim.opt.updatetime = 100								--faster completion
 vim.opt.timeoutlen = 500							--key timeout duration
 vim.opt.ttimeoutlen = 0								--key code timeout
 vim.opt.autoread = true								--auto reload files changed outside vim
@@ -148,7 +148,8 @@ local function quick_comment()
 	local commchar = {
 		lua = "--",
 		php = "\\/\\/",
-		python = "#"
+		python = "#",
+		toml = "#",
 	}
 	local char = commchar[ft] or "\\/\\/"
 
@@ -164,7 +165,8 @@ local function quick_uncomment()
 	local commchar = {
 		lua = "--",
 		php = "\\/\\/",
-		python = "#"
+		python = "#",
+		toml = "#",
 	}
 	local char = commchar[ft] or "\\/\\/"
 
@@ -231,6 +233,15 @@ local undodir = vim.fn.expand("~/.vim/undodir")
 if vim.fn.isdirectory(undodir) == 0 then
     vim.fn.mkdir(undodir, "p")
 end
+
+
+--Set encoding for php files
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "php",
+	callback = function()
+		vim.opt.fileencoding = "iso-8859-1"
+	end
+})
 
 
 -- ============================================================================
