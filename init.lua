@@ -143,17 +143,25 @@ vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Ed
 
 
 -- Quick comment
-local function quick_comment()
-	local ft = vim.bo.filetype
-	local commchar = {
+commchar = {
 		lua = "--",
 		php = "\\/\\/",
 		python = "#",
 		toml = "#",
-	}
+}
+
+local function quick_comment()
+	local ft = vim.bo.filetype
 	local char = commchar[ft] or "\\/\\/"
 
-	vim.cmd(":s/^\\(\\s*\\)/\\1" .. char .. " ")
+	local mode = vim.fn.mode()
+	if (mode == 'v' or mode == 'V') then
+		local _, start_s = unpack(vim.fn.getpos("v"))
+		local _, end_s = unpack(vim.fn.getpos("."))
+		vim.cmd(":" .. start_s .. "," .. end_s .. "s/^\\(\\s*\\)/\\1" .. char .. " ")
+	else
+		vim.cmd([[:s/^\(\s*\)/\1]] .. char .. " ")
+	end
 end
 
 vim.keymap.set("n", "<C-;>", quick_comment)
@@ -162,17 +170,17 @@ vim.keymap.set("v", "<C-;>", quick_comment)
 -- Quick uncomment
 local function quick_uncomment()
 	local ft = vim.bo.filetype
-	local commchar = {
-		lua = "--",
-		php = "\\/\\/",
-		python = "#",
-		toml = "#",
-	}
 	local char = commchar[ft] or "\\/\\/"
 
-	-- this has a problem when there is no white space
-	-- at the start of the line
-	vim.cmd(":s/^\\(\\s*\\)" .. char .. " /\\1")
+	local mode = vim.fn.mode()
+	if (mode == 'v' or mode == 'V') then
+		local _, start_s = unpack(vim.fn.getpos("v"))
+		local _, end_s = unpack(vim.fn.getpos("."))
+		vim.cmd(":" .. start_s .. "," .. end_s .. "s/^\\(\\s*\\)" .. char .. " /\\1")
+		-- vim.cmd([[:'<,'>s/^\(\s*\)]] .. char .. " /\\1")
+	else
+		vim.cmd([[:s/^\(\s*\)]] .. char .. " /\\1")
+	end
 end
 
 vim.keymap.set("n", "<C-A-;>", quick_uncomment)
