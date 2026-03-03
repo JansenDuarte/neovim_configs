@@ -148,7 +148,7 @@ vim.cmd([[
 ]])
 
 vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#d9d9d9", fg="#05021e"})
-vim.api.nvim_set_hl(0, "NoBuffStatusLine", { bold=true, bg="#0a0723", fg="#d9d9d9"})
+vim.api.nvim_set_hl(0, "NoBuffStatusLine", { bold=true, bg="#45274f", fg="#d9d9d9"})
 
 -- Inverted colors
 -- vim.api.nvim_set_hl(0, "StatusLine", { bold=true, bg="#0a0723", fg="#d9d9d9"})
